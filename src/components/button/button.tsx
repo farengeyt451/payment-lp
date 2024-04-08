@@ -1,8 +1,6 @@
 import { PropsWithChildren, SyntheticEvent } from 'react';
 import { styled } from 'styled-components';
-import * as Colors from '../../styles/colors';
-
-import './button.scss';
+import * as Colors from 'styles/colors';
 
 interface ButtonComponent {
   onButtonAction: (e: SyntheticEvent) => void;
@@ -62,34 +60,41 @@ function Button({ className, onButtonAction, icon, children }: PropsWithChildren
   );
 }
 
-const StyledButton = styled(Button)<{ $accent?: boolean; $weight?: number }>(props => ({
-  position: 'relative',
-  backgroundColor: props.$accent ? Colors.accent : '',
-  fontFamily: 'Poppins, sans-serif',
-  fontSize: '20px',
-  padding: '12px 36px',
-  borderRadius: '10px',
-  border: 'none',
-  cursor: 'pointer',
-  fontWeight: props.$weight || 400,
-}));
+function withIconStyles(props: PropsWithChildren<ButtonComponent>) {
+  return (
+    props.icon && {
+      '&:hover': {
+        backgroundColor: Colors.accent,
+        color: Colors.text,
 
-// const StyledWithIconButton = styled(StyledButton)<{ $icon: string }>`
-//   padding-right: 58px;
+        img: {
+          transition: 'transform 0.1s ease',
+          transform: 'translateY(2.5px)',
+        },
+      },
+    }
+  );
+}
 
-//   &:after {
-//     content: '';
-//     display: block;
-//     position: absolute;
-//     top: calc(50%);
-//     right: 16px;
-//     background-image: url(${DownloadIcon});
-//     background-size: 100%;
-//     z-index: 1;
-//     width: 22px;
-//     height: 22px;
-//     transform: translate(0, -50%);
-//   }
-// `;
+const StyledButton = styled(Button)<{ $accent?: boolean; $weight?: number }>(
+  props => ({
+    'position': 'relative',
+    'backgroundColor': props.$accent ? Colors.accent : '',
+    'fontFamily': 'Poppins, sans-serif',
+    'fontSize': '20px',
+    'padding': '12px 36px',
+    'borderRadius': '10px',
+    'border': 'none',
+    'fontWeight': props.$weight || 400,
+    'color': Colors.text,
+    'transition': 'color 0.1s ease-in, background-color 0.1s ease-out',
+    '&:hover': {
+      cursor: 'pointer',
+      backgroundColor: Colors.text,
+      color: Colors.base,
+    },
+  }),
+  withIconStyles,
+);
 
 export { Button, StyledButton };
