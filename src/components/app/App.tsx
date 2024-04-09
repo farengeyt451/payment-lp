@@ -1,14 +1,29 @@
-import Card from 'assets/card2x.png';
+import Card from 'assets/app-prev.png';
+import { CardForm } from 'components/card-form';
 import { Hero } from 'components/hero';
 import styled from 'styled-components';
 import { Header } from '../header';
 
+const MainSection = styled.section({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginTop: '50px',
+});
+
+const FormSection = styled.section({
+  display: 'block',
+  marginTop: '50px',
+  overflow: 'hidden',
+});
+
 const HeroWrapper = styled.div({
-  position: 'absolute',
   width: '100%',
   maxWidth: '540px',
-  top: '50%',
-  transform: 'translateY(-50%)',
+});
+
+const HeroImg = styled.img({
+  width: '522px',
 });
 
 function App() {
@@ -17,20 +32,18 @@ function App() {
       <Header></Header>
 
       <main>
-        <HeroWrapper>
-          <Hero></Hero>
-        </HeroWrapper>
-
-        <img
-          style={{
-            position: 'absolute',
-            right: '10%',
-            top: '20%',
-            width: '522px',
-          }}
-          src={Card}
-          alt=""
-        />
+        <MainSection>
+          <HeroWrapper>
+            <Hero></Hero>
+          </HeroWrapper>
+          <HeroImg
+            src={Card}
+            alt="app-preview"
+          />
+        </MainSection>
+        <FormSection>
+          <CardForm></CardForm>
+        </FormSection>
       </main>
 
       <footer></footer>

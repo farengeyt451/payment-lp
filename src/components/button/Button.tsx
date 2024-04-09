@@ -76,12 +76,12 @@ function withIconStyles(props: PropsWithChildren<ButtonComponent>) {
   );
 }
 
-const StyledButton = styled(Button)<{ $accent?: boolean; $weight?: number }>(
+const StyledButton = styled(Button)<{ $accent?: boolean; $weight?: number; $size?: number }>(
   props => ({
     'position': 'relative',
     'backgroundColor': props.$accent ? Colors.accent : '',
     'fontFamily': 'Poppins, sans-serif',
-    'fontSize': '20px',
+    'fontSize': `${props.$size}px` || '20px',
     'padding': '12px 36px',
     'borderRadius': '10px',
     'border': 'none',

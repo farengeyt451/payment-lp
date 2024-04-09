@@ -46,6 +46,7 @@ function Header() {
           onButtonAction={handleButtonAction}
           $accent
           $weight={700}
+          $size={15}
         >
           Log In
         </StyledButton>

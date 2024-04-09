@@ -1,0 +1,230 @@
+$white: hsl(0, 0%, 100%);
+$lightGrayishViolet: hsl(270, 3%, 75%);
+$darkGrayishViolet: hsl(279, 6%, 55%);
+$veryDarkViolet: hsl(278, 68%, 11%);
+$gradientStart: hsl(249, 99%, 64%);
+$gradientEnd: hsl(278, 94%, 30%);
+$error: hsl(0, 100%, 66%);
+$links: #ea7168;
+
+.global-container {
+  position: relative;
+  border-radius: 10px;
+  background-color: #2b2d3d;
+  width: 800px;
+  height: 500px;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  &::before {
+    border-radius: 10px;
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 207px;
+    height: 100%;
+    z-index: 0;
+    filter: brightness(30%);
+    background-image: url("../../assets/cover.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+
+  .submit-button {
+    color: #434449;
+    font-weight: 700;
+    margin-top: 1.1rem;
+    padding: 0.7rem 0.6rem;
+    font-size: 13px;
+    letter-spacing: 1px;
+    border: 0px;
+    border-radius: 5px;
+    background-color: hsl(262.29deg 100% 93.14%);
+
+    &:hover {
+      cursor: pointer;
+      background: $gradientEnd;
+      transition: background 0.5s ease-in-out;
+    }
+  }
+
+  div {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .form-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.1em;
+
+    label,
+    span {
+      color: #fff;
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.4em;
+    }
+
+    .input-border {
+      margin: 0;
+      background: $lightGrayishViolet;
+      border-radius: 5px;
+
+      .form-input {
+        margin: 0;
+        font-weight: 500;
+        font-size: 14px;
+        border: 1px solid transparent;
+        padding: 0.5rem 0.6rem;
+        width: 16rem;
+        background-clip: padding-box;
+        border-radius: 5px;
+        color: $veryDarkViolet;
+
+        &::placeholder {
+          /* Chrome, Firefox, Opera, Safari 10.1+ */
+          color: $lightGrayishViolet;
+        }
+
+        &:focus {
+          outline: none !important;
+        }
+      }
+    }
+
+    .input-border.border-m {
+      margin-right: 0.4rem;
+    }
+
+    .input-border:focus-within {
+      background: linear-gradient(to right, $gradientStart, $gradientEnd);
+    }
+
+    #exp-month,
+    #exp-year {
+      width: 3rem;
+    }
+
+    // #exp-month {
+    //   margin-right: 0.4rem;
+    // }
+    #cvc {
+      width: 6rem;
+    }
+  }
+}
+
+.cards {
+  z-index: 1;
+  width: 300px;
+
+  .card-front {
+    width: 300px;
+    height: 160px;
+    background-image: url("../../assets/card-template.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 10px;
+
+    .card-logo {
+      width: 60px;
+      padding: 1rem 1.3rem;
+    }
+
+    .details {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+
+      .higher-details {
+        padding: 0;
+
+        .card-number {
+          margin-bottom: 0.3rem;
+          color: $white;
+          font-size: 18px;
+          letter-spacing: 2px;
+          font-weight: 400;
+        }
+      }
+
+      .lower-details {
+        display: flex;
+        width: 250px;
+        justify-content: space-between;
+        margin: 0;
+        padding: 0;
+
+        .card-name,
+        .card-exp {
+          font-size: 10px;
+          text-transform: uppercase;
+          color: $white;
+          font-weight: 400;
+          letter-spacing: 1px;
+        }
+      }
+    }
+  }
+
+  .card-back {
+    width: 300px;
+    height: 160px;
+    background-image: url("https://i.ibb.co/J7fDm1J/bg-card-back.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    .cvc {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 12px;
+      color: $white;
+      font-weight: 400;
+
+      position: absolute;
+      transform: translate(230px, 60px);
+    }
+  }
+
+  div {
+    margin-bottom: 0;
+
+    &:nth-child(2) {
+      margin-top: 20px;
+      margin-left: 60px;
+    }
+  }
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+
+  p {
+    font-size: 11px;
+    color: $darkGrayishViolet;
+  }
+
+  a {
+    font-weight: 500;
+    color: $links;
+    text-decoration: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
