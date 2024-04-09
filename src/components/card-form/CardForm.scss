@@ -1,4 +1,3 @@
-$white: hsl(0, 0%, 100%);
 $lightGrayishViolet: hsl(270, 3%, 75%);
 $darkGrayishViolet: hsl(279, 6%, 55%);
 $veryDarkViolet: hsl(278, 68%, 11%);
@@ -28,7 +27,7 @@ $links: #ea7168;
     height: 100%;
     z-index: 0;
     filter: brightness(30%);
-    background-image: url("../../assets/cover.png");
+    background-image: url("../../assets/form-bg.png");
     background-repeat: no-repeat;
     background-size: cover;
   }
@@ -94,7 +93,8 @@ form {
 
         &::placeholder {
           /* Chrome, Firefox, Opera, Safari 10.1+ */
-          color: $lightGrayishViolet;
+          color: #b3b3b3;
+          font-weight: 400;
         }
 
         &:focus {
@@ -132,7 +132,7 @@ form {
   .card-front {
     width: 300px;
     height: 160px;
-    background-image: url("../../assets/card-template.png");
+    background-image: url("../../assets/card-template-f.png");
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 10px;
@@ -154,7 +154,7 @@ form {
 
         .card-number {
           margin-bottom: 0.3rem;
-          color: $white;
+          color: #fff;
           font-size: 18px;
           letter-spacing: 2px;
           font-weight: 400;
@@ -172,7 +172,7 @@ form {
         .card-exp {
           font-size: 10px;
           text-transform: uppercase;
-          color: $white;
+          color: #fff;
           font-weight: 400;
           letter-spacing: 1px;
         }
@@ -183,14 +183,13 @@ form {
   .card-back {
     width: 300px;
     height: 160px;
-    background-image: url("https://i.ibb.co/J7fDm1J/bg-card-back.png");
+    background-image: url("../../assets/card-template-b.png");
     background-repeat: no-repeat;
     background-size: contain;
 
     .cvc {
-      font-family: "Space Grotesk", sans-serif;
       font-size: 12px;
-      color: $white;
+      color: #fff;
       font-weight: 400;
 
       position: absolute;

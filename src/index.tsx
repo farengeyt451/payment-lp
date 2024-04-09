@@ -8,8 +8,10 @@ import reportWebVitals from './reportWebVitals';
 
 const GlobalStyle = createGlobalStyle`
   body {
+    position: relative;
     padding: 40px 120px;
     background-color: ${Colors.background};
+    padding-bottom: 200px;
   }
 `;
 

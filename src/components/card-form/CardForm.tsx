@@ -1,3 +1,4 @@
+import CardLogo from 'assets/card-logo.png';
 import { StyledButton } from 'components/button';
 import React from 'react';
 import './CardForm.scss';
@@ -17,12 +18,8 @@ function shuffle(array: any) {
 
   return array;
 }
-function randomIntFromInterval(min: any, max: any) {
-  // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
 
-function Form({ setCardNumber, setCardName, setCardExp, setCVC }: any) {
+function Form({ setCardNumber, setCardName, setCardExpMM, setCardExpYY, setCVC }: any) {
   function animateName(name: string) {
     const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
     let length = name.length;
@@ -106,6 +103,10 @@ function Form({ setCardNumber, setCardName, setCardExp, setCVC }: any) {
                 name="exp-month"
                 id="exp-month"
                 placeholder="MM"
+                onChange={e => {
+                  const { value } = e.target;
+                  setCardExpMM(value);
+                }}
               />
             </div>
             <div className="input-border">
@@ -115,6 +116,10 @@ function Form({ setCardNumber, setCardName, setCardExp, setCVC }: any) {
                 name="exp-year"
                 id="exp-year"
                 placeholder="YY"
+                onChange={e => {
+                  const { value } = e.target;
+                  setCardExpYY(value);
+                }}
               />
             </div>
           </div>
@@ -131,6 +136,10 @@ function Form({ setCardNumber, setCardName, setCardExp, setCVC }: any) {
               name="cvc"
               id="cvc"
               placeholder="e.g. 123"
+              onChange={e => {
+                const { value } = e.target;
+                setCVC(value);
+              }}
             />
           </div>
         </div>
@@ -152,7 +161,8 @@ function Form({ setCardNumber, setCardName, setCardExp, setCVC }: any) {
 function CardForm() {
   const [cardNumber, setCardNumber] = React.useState('0000 0000 0000 0000');
   const [cardName, setCardName] = React.useState('Jane Appleseed');
-  const [cardExp, setCardExp] = React.useState('00/00');
+  const [cardExpMM, setCardExpMM] = React.useState('00');
+  const [cardExpYY, setCardExpYY] = React.useState('00');
   const [cvc, setCVC] = React.useState('000');
 
   return (
@@ -162,16 +172,27 @@ function CardForm() {
           <div className="card-front">
             <img
               className="card-logo"
-              src="https://i.ibb.co/wYPDjyL/card-logo.png"
+              src={CardLogo}
               alt="card-logo"
             />
+            {/* <div
+              style={{
+                margin: '10px',
+                width: '47px',
+                height: '47px',
+                background: 'grey',
+                borderRadius: '50%',
+              }}
+            ></div> */}
             <div className="details">
               <div className="higher-details">
                 <p className="card-number">{cardNumber}</p>
               </div>
               <div className="lower-details">
                 <p className="card-name">{cardName}</p>
-                <p className="card-exp">{cardExp}</p>
+                <p className="card-exp">
+                  {cardExpMM}/{cardExpYY}
+                </p>
               </div>
             </div>
           </div>
@@ -182,7 +203,8 @@ function CardForm() {
         <Form
           setCardNumber={setCardNumber}
           setCardName={setCardName}
-          setCardExp={setCardExp}
+          setCardExpMM={setCardExpMM}
+          setCardExpYY={setCardExpYY}
           setCVC={setCVC}
         />
       </div>

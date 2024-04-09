@@ -26,7 +26,20 @@ const HeroImg = styled.img({
   width: '522px',
 });
 
+const Footer = styled.footer({
+  position: 'absolute',
+  bottom: '0',
+  left: '0',
+  width: '100%',
+
+  p: {
+    padding: '10px 0',
+  },
+});
+
 function App() {
+  const year = new Date().getFullYear();
+
   return (
     <div className="App">
       <Header></Header>
@@ -46,7 +59,9 @@ function App() {
         </FormSection>
       </main>
 
-      <footer></footer>
+      <Footer>
+        <p>© {year} — MIT License</p>
+      </Footer>
     </div>
   );
 }
