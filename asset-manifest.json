@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/payment-lp/static/css/main.91e1f6b8.css",
+    "main.js": "/payment-lp/static/js/main.a81be294.js",
+    "static/js/453.faa16a5f.chunk.js": "/payment-lp/static/js/453.faa16a5f.chunk.js",
+    "static/media/form-bg.png": "/payment-lp/static/media/form-bg.9979481f43ea56f005e7.png",
+    "static/media/card-template-f.png": "/payment-lp/static/media/card-template-f.e422c97992f81cd11d47.png",
+    "static/media/app-prev.png": "/payment-lp/static/media/app-prev.4c78845264c9d48010d5.png",
+    "static/media/card-template-b.png": "/payment-lp/static/media/card-template-b.d1595b67e18328270c8e.png",
+    "index.html": "/payment-lp/index.html",
+    "static/media/logo.svg": "/payment-lp/static/media/logo.c63ce6e41ea7eb4381b336f1305c2943.svg",
+    "static/media/arrow-down-circle.svg": "/payment-lp/static/media/arrow-down-circle.d77ecc180895dd94597ba97f96de32c9.svg",
+    "main.91e1f6b8.css.map": "/payment-lp/static/css/main.91e1f6b8.css.map",
+    "main.a81be294.js.map": "/payment-lp/static/js/main.a81be294.js.map",
+    "453.faa16a5f.chunk.js.map": "/payment-lp/static/js/453.faa16a5f.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.91e1f6b8.css",
+    "static/js/main.a81be294.js"
+  ]
+}
