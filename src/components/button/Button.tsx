@@ -6,11 +6,13 @@ interface ButtonComponent {
   onButtonAction: (e: SyntheticEvent) => void;
   className?: string;
   icon?: string;
+  disabled?: boolean;
 }
 
-function Button({ className, onButtonAction, icon, children }: PropsWithChildren<ButtonComponent>) {
+function Button({ disabled = false, className, onButtonAction, icon, children }: PropsWithChildren<ButtonComponent>) {
   return (
     <button
+      disabled={disabled}
       className={className}
       onClick={onButtonAction}
       style={
@@ -60,24 +62,9 @@ function Button({ className, onButtonAction, icon, children }: PropsWithChildren
   );
 }
 
-function withIconStyles(props: PropsWithChildren<ButtonComponent>) {
-  return (
-    props.icon && {
-      '&:hover': {
-        backgroundColor: Colors.accent,
-        color: Colors.text,
-
-        img: {
-          transition: 'transform 0.1s ease',
-          transform: 'translateY(2.5px)',
-        },
-      },
-    }
-  );
-}
-
 const StyledButton = styled(Button)<{ $accent?: boolean; $weight?: number; $size?: number }>(
   props => ({
+    'pointerEvents': props.disabled ? 'none' : 'auto',
     'position': 'relative',
     'backgroundColor': props.$accent ? Colors.accent : '',
     'fontFamily': 'Poppins, sans-serif',
@@ -95,6 +82,32 @@ const StyledButton = styled(Button)<{ $accent?: boolean; $weight?: number; $size
     },
   }),
   withIconStyles,
+  disabled,
 );
+
+function withIconStyles(props: PropsWithChildren<ButtonComponent>) {
+  return (
+    props.icon && {
+      '&:hover': {
+        backgroundColor: Colors.accent,
+        color: Colors.text,
+
+        img: {
+          transition: 'transform 0.1s ease',
+          transform: 'translateY(2.5px)',
+        },
+      },
+    }
+  );
+}
+
+function disabled(props: PropsWithChildren<ButtonComponent>) {
+  return (
+    props.disabled && {
+      background: Colors.text,
+      color: Colors.disabled,
+    }
+  );
+}
 
 export { Button, StyledButton };

@@ -1,151 +1,239 @@
+import { faker } from '@faker-js/faker';
 import CardLogo from 'assets/card-logo.png';
 import { StyledButton } from 'components/button';
-import React from 'react';
+import React, { PropsWithChildren, SyntheticEvent, useCallback, useRef } from 'react';
 import './CardForm.scss';
 
-function shuffle(array: any) {
-  let currentIndex = array.length,
-    randomIndex;
-  // While there remain elements to shuffle.
+interface FormProps {
+  setCardNumber: React.Dispatch<React.SetStateAction<string>>;
+  setCardName: React.Dispatch<React.SetStateAction<string>>;
+  setCardExpMM: React.Dispatch<React.SetStateAction<string>>;
+  setCardExpYY: React.Dispatch<React.SetStateAction<string>>;
+  setCVC: React.Dispatch<React.SetStateAction<string>>;
+  randomName: string;
+  randomCreditCardNumber: string;
+  isDataFilled: boolean;
+  className?: string;
+}
+
+enum ChangesTypeEnum {
+  Month = 'Month',
+  Year = 'Year',
+  CVC = 'CVC',
+}
+
+const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('');
+const DEFAULT_CARD_NUMBER = '0000 0000 0000 0000';
+const CARD_NUMBER_PATTERN = '#### #### #### ####';
+const DEFAULT_CARD_MM = '00';
+const DEFAULT_CARD_YY = '00';
+const DEFAULT_CARD_CVC = '000';
+const DEFAULT_CARD_NAME = faker.person.fullName();
+const RANDOM_CREDIT_CARD_NUMBER = faker.finance.creditCardNumber(CARD_NUMBER_PATTERN);
+
+const useDebounce = (func: any, delay: number) => {
+  const inDebounce = useRef<ReturnType<typeof setTimeout>>();
+
+  const debounce = useCallback(
+    function (...args: unknown[]) {
+      clearTimeout(inDebounce.current);
+      inDebounce.current = setTimeout(() => func.apply({}, args), delay);
+    },
+    [func, delay],
+  );
+
+  return debounce;
+};
+
+function shuffle(array: string[]): string[] {
+  let currentIndex = array.length;
+  let randomIndex: number;
+
   while (currentIndex !== 0) {
-    // Pick a remaining element.
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
 
-    // And swap it with the current element.
     [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
   }
 
   return array;
 }
 
-function Form({ setCardNumber, setCardName, setCardExpMM, setCardExpYY, setCVC }: any) {
-  function animateName(name: string) {
-    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
-    let length = name.length;
-    let tempStr = alphabet.slice(0, length - 1);
-    for (let i = 0; i < 10; i++) {
+function Form({
+  className,
+  setCardNumber,
+  setCardName,
+  setCardExpMM,
+  setCardExpYY,
+  setCVC,
+  randomName,
+  randomCreditCardNumber,
+  isDataFilled,
+}: PropsWithChildren<FormProps>) {
+  const debounce = useDebounce(handleCardName, 250);
+
+  function handleCardName(value: string) {
+    if (!value.trim()) {
+      setCardName(randomName);
+    } else {
+      animateName(value);
+    }
+  }
+
+  const animateName = useCallback(
+    (name: string) => {
+      let length = name.length;
+      let tempStr = ALPHABET.slice(0, length - 1);
       setCardName(tempStr.join(''));
       shuffle(tempStr);
+      setTimeout(() => {
+        setCardName(name);
+      }, 200);
+    },
+    [setCardName],
+  );
+
+  function handleNameChange(event: SyntheticEvent<HTMLInputElement>) {
+    const { value } = event.target as HTMLInputElement;
+    debounce(value);
+  }
+
+  function handleCardNumberChange(event: SyntheticEvent<HTMLInputElement>) {
+    let { value: cardNumber } = event.target as HTMLInputElement;
+    let { length: cardNumberLength } = cardNumber.replace(/\s/g, '');
+
+    if (cardNumberLength > 0 && cardNumberLength % 4 === 0) {
+      (event.target as HTMLInputElement).value += ' ';
     }
-    setTimeout(() => {
-      setCardName(name);
-    }, 1000);
+
+    if (!cardNumber.trim().length) {
+      setCardNumber(DEFAULT_CARD_NUMBER);
+    } else {
+      setCardNumber(cardNumber);
+    }
+  }
+
+  function handleCardChanges(event: SyntheticEvent<HTMLInputElement>, changesType: ChangesTypeEnum) {
+    const { value } = event.target as HTMLInputElement;
+    const trimmed = value.trim();
+
+    switch (changesType) {
+      case ChangesTypeEnum.Month:
+        setCardExpMM(trimmed ? value : DEFAULT_CARD_MM);
+        break;
+      case ChangesTypeEnum.Year:
+        setCardExpYY(trimmed ? value : DEFAULT_CARD_YY);
+        break;
+      case ChangesTypeEnum.CVC:
+        setCVC(trimmed ? value : DEFAULT_CARD_CVC);
+        break;
+    }
   }
 
   return (
-    <form name="cc-info-form">
-      {/*Item 1*/}
-      <div className="form-item">
-        <label htmlFor="cc-name">Cardholder Name</label>
-        <div className="input-border">
+    <form className="form">
+      <div className="form__item">
+        <label
+          htmlFor="cc-name"
+          className="form__label"
+        >
+          Cardholder Name
+        </label>
+        <div className="form__wrapper">
           <input
-            className="form-input"
-            placeholder="e.g. Jane Appleseed"
+            className="form__input"
+            maxLength={30}
+            placeholder={`${randomName}`}
             type="text"
             name="cc-name"
             id="cc-name"
-            onChange={e => {
-              if (e.target.value.trim() === '') {
-                setCardName('Jane Appleseed');
-              } else {
-                animateName(e.target.value);
-              }
-            }}
+            onChange={handleNameChange}
           />
         </div>
       </div>
-      {/*End Item 1*/}
 
-      {/*Item 2*/}
-      <div className="form-item">
-        <label htmlFor="cc-number">Card Number</label>
-        <div className="input-border">
+      <div className="form__item">
+        <label
+          htmlFor="cc-number"
+          className="form__label"
+        >
+          Card Number
+        </label>
+        <div className="form__wrapper">
           <input
-            className="form-input"
+            className="form__input"
             type="tel"
             pattern="[0-9\.]+"
             autoComplete="cc-number"
-            // maxLength="19"
+            maxLength={19}
             name="cc-number"
             id="cc-number"
-            placeholder="e.g. 1234 5678 9123 0000"
-            onChange={e => {
-              let len = e.target.value.replace(/\s/g, '').length;
-
-              if (len > 0) {
-                if (len % 4 === 0) {
-                  e.target.value += ' ';
-                }
-              }
-              if (e.target.value.trim().length === 0) {
-                setCardNumber('0000 0000 0000 0000');
-              } else {
-                setCardNumber(e.target.value);
-              }
-            }}
+            placeholder={`${randomCreditCardNumber}`}
+            onChange={handleCardNumberChange}
           />
         </div>
       </div>
-      {/*End Item 2*/}
 
-      <div>
-        {/*Item 3*/}
-        <div className="form-item">
-          <span>
-            Exp. Date (<label htmlFor="exp-month"> MM </label> /<label htmlFor="exp-year">YY</label>)
+      <div className="form__exp">
+        <div className="form__item">
+          <span className="form__exp-date">
+            Exp. Date (
+            <label
+              className="form__label"
+              htmlFor="exp-month"
+            >
+              MM
+            </label>
+            /<label htmlFor="exp-year">YY</label>)
           </span>
-          <div className="exp-inputs">
-            <div className="input-border border-m">
+          <div className="form__exp-actions">
+            <div className="form__wrapper form__wrapper--spaced">
               <input
-                className="form-input"
+                className="form__input form__input--exp-month"
+                maxLength={2}
                 type="text"
                 name="exp-month"
                 id="exp-month"
                 placeholder="MM"
-                onChange={e => {
-                  const { value } = e.target;
-                  setCardExpMM(value);
-                }}
+                onChange={event => handleCardChanges(event, ChangesTypeEnum.Month)}
               />
             </div>
-            <div className="input-border">
+            <div className="form__wrapper">
               <input
-                className="form-input"
+                className="form__input form__input--exp-year"
+                maxLength={2}
                 type="text"
                 name="exp-year"
                 id="exp-year"
                 placeholder="YY"
-                onChange={e => {
-                  const { value } = e.target;
-                  setCardExpYY(value);
-                }}
+                onChange={event => handleCardChanges(event, ChangesTypeEnum.Year)}
               />
             </div>
           </div>
         </div>
-        {/*End Item 3*/}
 
-        {/*Item 4*/}
-        <div className="form-item">
-          <label htmlFor="cvc">CVC</label>
-          <div className="input-border">
+        <div className="form__item">
+          <label
+            htmlFor="cvc"
+            className="form__label"
+          >
+            CVC
+          </label>
+          <div className="form__wrapper">
             <input
-              className="form-input"
+              className="form__input form__input--cvc"
+              maxLength={3}
               type="text"
               name="cvc"
               id="cvc"
-              placeholder="e.g. 123"
-              onChange={e => {
-                const { value } = e.target;
-                setCVC(value);
-              }}
+              placeholder="123"
+              onChange={event => handleCardChanges(event, ChangesTypeEnum.CVC)}
             />
           </div>
         </div>
-        {/*End Item 4*/}
       </div>
       <StyledButton
+        disabled={!isDataFilled}
         onButtonAction={e => {
           e.preventDefault();
         }}
@@ -159,56 +247,55 @@ function Form({ setCardNumber, setCardName, setCardExpMM, setCardExpYY, setCVC }
 }
 
 function CardForm() {
-  const [cardNumber, setCardNumber] = React.useState('0000 0000 0000 0000');
-  const [cardName, setCardName] = React.useState('Jane Appleseed');
-  const [cardExpMM, setCardExpMM] = React.useState('00');
-  const [cardExpYY, setCardExpYY] = React.useState('00');
-  const [cvc, setCVC] = React.useState('000');
+  const [cardNumber, setCardNumber] = React.useState<string>(DEFAULT_CARD_NUMBER);
+  const [cardName, setCardName] = React.useState<string>(DEFAULT_CARD_NAME);
+  const [cardExpMM, setCardExpMM] = React.useState<string>(DEFAULT_CARD_MM);
+  const [cardExpYY, setCardExpYY] = React.useState<string>(DEFAULT_CARD_YY);
+  const [cvc, setCVC] = React.useState<string>(DEFAULT_CARD_CVC);
+
+  const isDataFilled =
+    cardNumber !== DEFAULT_CARD_NUMBER &&
+    cardName !== DEFAULT_CARD_NAME &&
+    cardExpMM !== DEFAULT_CARD_MM &&
+    cardExpYY !== DEFAULT_CARD_YY &&
+    cvc !== DEFAULT_CARD_CVC;
 
   return (
-    <>
-      <div className="global-container">
-        <div className="cards">
-          <div className="card-front">
-            <img
-              className="card-logo"
-              src={CardLogo}
-              alt="card-logo"
-            />
-            {/* <div
-              style={{
-                margin: '10px',
-                width: '47px',
-                height: '47px',
-                background: 'grey',
-                borderRadius: '50%',
-              }}
-            ></div> */}
-            <div className="details">
-              <div className="higher-details">
-                <p className="card-number">{cardNumber}</p>
-              </div>
-              <div className="lower-details">
-                <p className="card-name">{cardName}</p>
-                <p className="card-exp">
-                  {cardExpMM}/{cardExpYY}
-                </p>
-              </div>
+    <div className="card-f">
+      <div className="card-f__cards">
+        <div className="card-f__front">
+          <img
+            className="card-f__logo"
+            src={CardLogo}
+            alt="card-logo"
+          />
+          <div className="card-f__details">
+            <div className="card-f__main-details">
+              <p className="card-f__number">{cardNumber}</p>
+            </div>
+            <div className="card-f__other-details">
+              <p className="card-f__name">{cardName}</p>
+              <p className="card-f__exp">
+                {cardExpMM}/{cardExpYY}
+              </p>
             </div>
           </div>
-          <div className="card-back">
-            <p className="cvc">{cvc}</p>
-          </div>
         </div>
-        <Form
-          setCardNumber={setCardNumber}
-          setCardName={setCardName}
-          setCardExpMM={setCardExpMM}
-          setCardExpYY={setCardExpYY}
-          setCVC={setCVC}
-        />
+        <div className="card-f__back">
+          <p className="card-f__cvc">{cvc}</p>
+        </div>
       </div>
-    </>
+      <Form
+        randomName={DEFAULT_CARD_NAME}
+        randomCreditCardNumber={RANDOM_CREDIT_CARD_NUMBER}
+        setCardNumber={setCardNumber}
+        setCardName={setCardName}
+        setCardExpMM={setCardExpMM}
+        setCardExpYY={setCardExpYY}
+        setCVC={setCVC}
+        isDataFilled={isDataFilled}
+      />
+    </div>
   );
 }
 

@@ -13,3 +13,4 @@ export const danger = '#ef5350';
 export const accent = '#e9dcff';
 export const background = '#1e1e1e';
 export const accentDark = '#2b2d3d';
+export const disabled = '#787b87';
