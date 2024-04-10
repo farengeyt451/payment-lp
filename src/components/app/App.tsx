@@ -1,8 +1,32 @@
 import Card from 'assets/app-prev.png';
-import { CardForm } from 'components/card-form';
+import { CardForm, FormPayload } from 'components/card-form';
 import { Hero } from 'components/hero';
+import {
+  DEFAULT_CARD_CVC,
+  DEFAULT_CARD_MM,
+  DEFAULT_CARD_NAME,
+  DEFAULT_CARD_NUMBER,
+  DEFAULT_CARD_YY,
+} from 'constants/card-data';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import * as Colors from 'styles/colors';
 import { Header } from '../header';
+const renderFormData = (data?: FormPayload) => {
+  return `
+  {
+
+    CARDHOLDER NAME: ${data?.cardName}
+
+    CARD NUMBER: ${data?.cardNumber}
+
+    EXP. DATE (MM/YY): ${data?.cardExpMM}/${data?.cardExpYY}
+
+    CVC: ${data?.cvc}
+
+  }
+`;
+};
 
 const MainSection = styled.section({
   display: 'flex',
@@ -15,6 +39,18 @@ const FormSection = styled.section({
   display: 'block',
   marginTop: '50px',
   overflow: 'hidden',
+});
+
+const Wrapper = styled.div({
+  display: 'flex',
+});
+
+const Code = styled.code({
+  color: Colors.base,
+});
+
+const Pre = styled.pre({
+  padding: '20px 0 20px 60px',
 });
 
 const HeroWrapper = styled.div({
@@ -33,12 +69,25 @@ const Footer = styled.footer({
   width: '100%',
 
   p: {
+    textAlign: 'center',
+    color: Colors.base,
     padding: '10px 0',
   },
 });
 
 function App() {
+  const [formData, setFormData] = React.useState<FormPayload>();
   const year = new Date().getFullYear();
+
+  useEffect(() => {
+    setFormData({
+      cardName: DEFAULT_CARD_NAME,
+      cardNumber: DEFAULT_CARD_NUMBER,
+      cardExpMM: DEFAULT_CARD_MM,
+      cardExpYY: DEFAULT_CARD_YY,
+      cvc: DEFAULT_CARD_CVC,
+    });
+  }, []);
 
   return (
     <div className="App">
@@ -54,9 +103,16 @@ function App() {
             alt="app-preview"
           />
         </MainSection>
-        <FormSection>
-          <CardForm></CardForm>
-        </FormSection>
+
+        <Wrapper>
+          <FormSection>
+            <CardForm onCardFormSubmit={payload => setFormData(payload)}></CardForm>
+          </FormSection>
+
+          <Pre>
+            <Code>{renderFormData(formData)}</Code>
+          </Pre>
+        </Wrapper>
       </main>
 
       <Footer>

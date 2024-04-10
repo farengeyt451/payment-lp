@@ -1,6 +1,14 @@
-import { faker } from '@faker-js/faker';
 import CardLogo from 'assets/card-logo.png';
 import { StyledButton } from 'components/button';
+import {
+  ALPHABET,
+  DEFAULT_CARD_CVC,
+  DEFAULT_CARD_MM,
+  DEFAULT_CARD_NAME,
+  DEFAULT_CARD_NUMBER,
+  DEFAULT_CARD_YY,
+  RANDOM_CREDIT_CARD_NUMBER,
+} from 'constants/card-data';
 import React, { PropsWithChildren, SyntheticEvent, useCallback, useRef } from 'react';
 import './CardForm.scss';
 
@@ -14,6 +22,15 @@ interface FormProps {
   randomCreditCardNumber: string;
   isDataFilled: boolean;
   className?: string;
+  onFormSubmit: () => void;
+}
+
+export interface FormPayload {
+  cardNumber: string;
+  cardName: string;
+  cardExpMM: string;
+  cardExpYY: string;
+  cvc: string;
 }
 
 enum ChangesTypeEnum {
@@ -21,15 +38,6 @@ enum ChangesTypeEnum {
   Year = 'Year',
   CVC = 'CVC',
 }
-
-const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('');
-const DEFAULT_CARD_NUMBER = '0000 0000 0000 0000';
-const CARD_NUMBER_PATTERN = '#### #### #### ####';
-const DEFAULT_CARD_MM = '00';
-const DEFAULT_CARD_YY = '00';
-const DEFAULT_CARD_CVC = '000';
-const DEFAULT_CARD_NAME = faker.person.fullName();
-const RANDOM_CREDIT_CARD_NUMBER = faker.finance.creditCardNumber(CARD_NUMBER_PATTERN);
 
 const useDebounce = (func: any, delay: number) => {
   const inDebounce = useRef<ReturnType<typeof setTimeout>>();
@@ -60,7 +68,6 @@ function shuffle(array: string[]): string[] {
 }
 
 function Form({
-  className,
   setCardNumber,
   setCardName,
   setCardExpMM,
@@ -69,6 +76,7 @@ function Form({
   randomName,
   randomCreditCardNumber,
   isDataFilled,
+  onFormSubmit,
 }: PropsWithChildren<FormProps>) {
   const debounce = useDebounce(handleCardName, 250);
 
@@ -236,6 +244,7 @@ function Form({
         disabled={!isDataFilled}
         onButtonAction={e => {
           e.preventDefault();
+          onFormSubmit();
         }}
         $accent
         $weight={500}
@@ -246,20 +255,21 @@ function Form({
   );
 }
 
-function CardForm() {
+function CardForm({ onCardFormSubmit }: PropsWithChildren<{ onCardFormSubmit: (data: FormPayload) => void }>) {
   const [cardNumber, setCardNumber] = React.useState<string>(DEFAULT_CARD_NUMBER);
   const [cardName, setCardName] = React.useState<string>(DEFAULT_CARD_NAME);
   const [cardExpMM, setCardExpMM] = React.useState<string>(DEFAULT_CARD_MM);
   const [cardExpYY, setCardExpYY] = React.useState<string>(DEFAULT_CARD_YY);
   const [cvc, setCVC] = React.useState<string>(DEFAULT_CARD_CVC);
 
-  const isDataFilled =
-    cardNumber !== DEFAULT_CARD_NUMBER &&
-    cardName !== DEFAULT_CARD_NAME &&
-    cardExpMM !== DEFAULT_CARD_MM &&
-    cardExpYY !== DEFAULT_CARD_YY &&
-    cvc !== DEFAULT_CARD_CVC;
+  // const isDataFilled =
+  //   cardNumber !== DEFAULT_CARD_NUMBER &&
+  //   cardName !== DEFAULT_CARD_NAME &&
+  //   cardExpMM !== DEFAULT_CARD_MM &&
+  //   cardExpYY !== DEFAULT_CARD_YY &&
+  //   cvc !== DEFAULT_CARD_CVC;
 
+  const isDataFilled = true;
   return (
     <div className="card-f">
       <div className="card-f__cards">
@@ -294,6 +304,15 @@ function CardForm() {
         setCardExpYY={setCardExpYY}
         setCVC={setCVC}
         isDataFilled={isDataFilled}
+        onFormSubmit={() =>
+          onCardFormSubmit({
+            cardNumber,
+            cardName,
+            cardExpMM,
+            cardExpYY,
+            cvc,
+          })
+        }
       />
     </div>
   );
