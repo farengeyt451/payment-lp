@@ -262,14 +262,13 @@ function CardForm({ onCardFormSubmit }: PropsWithChildren<{ onCardFormSubmit: (d
   const [cardExpYY, setCardExpYY] = React.useState<string>(DEFAULT_CARD_YY);
   const [cvc, setCVC] = React.useState<string>(DEFAULT_CARD_CVC);
 
-  // const isDataFilled =
-  //   cardNumber !== DEFAULT_CARD_NUMBER &&
-  //   cardName !== DEFAULT_CARD_NAME &&
-  //   cardExpMM !== DEFAULT_CARD_MM &&
-  //   cardExpYY !== DEFAULT_CARD_YY &&
-  //   cvc !== DEFAULT_CARD_CVC;
+  const isDataFilled =
+    cardNumber !== DEFAULT_CARD_NUMBER &&
+    cardName !== DEFAULT_CARD_NAME &&
+    cardExpMM !== DEFAULT_CARD_MM &&
+    cardExpYY !== DEFAULT_CARD_YY &&
+    cvc !== DEFAULT_CARD_CVC;
 
-  const isDataFilled = true;
   return (
     <div className="card-f">
       <div className="card-f__cards">
